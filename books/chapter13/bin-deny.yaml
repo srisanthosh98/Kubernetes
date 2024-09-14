@@ -1,0 +1,18 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: block-write-bin
+  namespace: demo
+spec:
+  action: Block
+  file:
+    # /bin in the KinD image is a link to /usr/bin - KubeArmor secures the final endpoint, so we need to have /usr/bin in the policy
+    matchDirectories:
+    - dir: /usr/bin/
+      readOnly: true
+      recursive: true
+    - dir: /bin/
+      readOnly: true
+      recursive: true
+  message: Alert! An attempt to write to the /bin directory denied.
+
